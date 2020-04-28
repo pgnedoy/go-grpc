@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package statistics;
+
+option go_package = ".;statistics";
+
+service Statistics {
+   rpc SendAccount(Account) returns (Response) {}
+   rpc SendTransaction(stream Transaction) returns (Summary) {}
+}
+
+message Account {
+    string id = 1;
+    string user_id = 2;
+    repeated Transaction transactions = 3;
+    google.protobuf.Timestamp created_at = 4;
+}
+
+message Transaction {
+    string id = 1;
+    Type type = 2;
+    Category category = 3;
+    double count = 4;
+    string description = 5;
+    google.protobuf.Timestamp created_at = 6;
+}
+
+enum Type {
+    EXPENSES = 0;
+    INCOMES = 1;
+}
+
+enum Category {
+    OTHER = 0;
+    PRODUCTS = 2;
+    TRANSPORTATION = 3;
+    FOOD = 4;
+    CLOSES = 5;
+}
+
+message Response {
+    int64 code = 1;
+    string message = 2;
+}
+
+message Summary {
+    int32 count = 1;
+    int32 elapsed_time = 4;
+}
